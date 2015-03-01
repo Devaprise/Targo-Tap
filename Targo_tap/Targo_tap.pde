@@ -98,7 +98,7 @@ void setup() {  // this is run once.
     menu = loadImage("/static/uploaded_resources/p.17470/TargoTap_Menu.jpg");
     
     // button definition
-    button = new Button(0, height/5, width/2,height/3.33,0);
+    button0 = new Button(0, height/5, width/2, height/3.33,0);
     button1 = new Button(width/2, height/5, width/2, height/3.33,1);
     button2 = new Button(0, height/2, width/2, height/3.33,2);
     button3 = new Button(width/2, height/2, width/2, height/3.33,3);
