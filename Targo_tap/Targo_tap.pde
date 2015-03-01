@@ -2,7 +2,6 @@
 // http://studio.sketchpad.cc/sp/pad/view/ro.98$Fad5UME48E/rev.1511
  
 //resources
-/* @pjs preload="/static/uploaded_resources/p.17470/TargoTap_Menu.jpg"; */
  
  
 //debug mode
@@ -35,14 +34,13 @@ menuButton options;
 menuButton credits;
 menuButton actionMode;
 menuButton zenMode;
-//menuButton[] buttonArray;
+menuButton[] buttonArray;
  
 boolean onButton = false;
-//textAlign(CENTER, CENTER);
 int height = 1080;
 int width = 720;
 int buttonCenterX = width/2;
-int buttonCenterY = height/3.33;
+float buttonCenterY = height/3.33;
 color backgroundColor = color(216, 222, 191);
  
 int FPS = 30;
@@ -80,7 +78,7 @@ int cx = width/4;
 int cy = height/3;
 int goalNum = ceil(random(0, 4));
 int score;
-string gamestate = "menu";
+String gamestate = "menu";
  
 void setup() {  // this is run once.   
     
@@ -100,7 +98,7 @@ void setup() {  // this is run once.
     menu = loadImage("/static/uploaded_resources/p.17470/TargoTap_Menu.jpg");
     
     // button definition
-    button0 = new Button(0, height/5, width/2,height/3.33,0);
+    button = new Button(0, height/5, width/2,height/3.33,0);
     button1 = new Button(width/2, height/5, width/2, height/3.33,1);
     button2 = new Button(0, height/2, width/2, height/3.33,2);
     button3 = new Button(width/2, height/2, width/2, height/3.33,3);
@@ -161,8 +159,16 @@ void drawGame(){
             textSize(50);
             
             text("Score: "+score,width/2,height/2);
-            text("Game Over",width/2,height/3)
-            
+            text("Game Over",width/2,height/3);
+            break;
+        default:
+          textSize(50);
+          
+          text("Uh Oh!");
+          textSize(30);
+          
+          text("Page has not been found!");
+         
     }
     popStyle();
 }
@@ -178,10 +184,10 @@ void updateGame() {
             button1.checkPressed();
             button2.checkPressed();
             button3.checkPressed();
-            if(bArray[goalNum-1]===true){
+            if(bArray[goalNum-1]==true){
                 score++;
                 int newNum=goalNum;
-                while(newNum===goalNum){
+                while(newNum==goalNum){
                     newNum=ceil(random(0,4));
                 };
                 goalNum=newNum;
@@ -219,10 +225,10 @@ class menuButton{
     int w;
     int h;
     menuButton(int x, int y, int w, int h){
-        if(x==="mid"){
+        if(x=="mid"){
             x=width/2-w/2;
         }
-        if(y==="mid"){
+        if(y=="mid"){
             y=height/2-h/2;
         }
         this.x = x;
@@ -263,7 +269,7 @@ class Button{
         pushStyle();
         stroke(0);
         fill(255);
-        if(bArray[id]===true){
+        if(bArray[id]==true){
             fill(0,200,250);
         } else {
             fill(150,100,255);
