@@ -49,7 +49,7 @@ class Button{
  
 //debug mode
  
-boolean debugMode = false;
+boolean debugMode=false;
  
  
 // Pressing Control-R will render this sketch.
@@ -58,7 +58,7 @@ boolean debugMode = false;
 //change this to play around with rotation
 
 //ROTATION
-boolean buttonsRotating = false;
+boolean buttonsRotating =false;
 
 
 
@@ -137,17 +137,14 @@ void setup() {  // this is run once.
     // set the width of the line. 
     strokeWeight(1);
     
-<<<<<<< Updated upstream
     PImage menu;
     //menu = loadImage("/static/uploaded_resources/p.17470/TargoTap_Menu.jpg");
-=======
->>>>>>> Stashed changes
     
     // button definition
-    button0 = new Button();//0, height/5, width/2, height/3.33,0
-    button1 = new Button();//width/2, height/5, width/2, height/3.33,1
-    button2 = new Button();//0, height/2, width/2, height/3.33,2
-    button3 = new Button();//width/2, height/2, width/2, height/3.33,3
+    button0 = new Button(0, height/5, width/2, height/3.33,0);
+    button1 = new Button(width/2, height/5, width/2, height/3.33,1);
+    button2 = new Button(0, height/2, width/2, height/3.33,2);
+    button3 = new Button(width/2, height/2, width/2, height/3.33,3);
     
     //button4 = new Button(width/1.5, height/2,width/2,height/3.33,3);
     
@@ -175,11 +172,7 @@ void drawGame(){
     fill(0);
     title();
     switch(gamestate){
-<<<<<<< Updated upstream
         case 0:
-=======
-        case 1:
->>>>>>> Stashed changes
             if(buttonsRotating){
                 pushMatrix();
                 translate(width/2, height/2);
@@ -198,7 +191,6 @@ void drawGame(){
             noFill();
             textSize(30);
             text("Score: "+score,width/2,height-height/8);
-<<<<<<< Updated upstream
             int time = 25-elapsedSecs;
             text("Time: " + time, width/2, 20);
             break;
@@ -206,15 +198,6 @@ void drawGame(){
             //image(loadImage("/static/uploaded_resources/p.17470/TargoTap_Menu.jpg"), 0, 0);
             break;
         case 2:
-=======
-            float time = 25-elapsedSecs;
-            text("Time: " + time, width/2, 20);
-            break;
-        case 2:
-            //image(loadImage("/static/uploaded_resources/p.17470/TargoTap_Menu.jpg"), 0, 0);
-            break;
-        case 3:
->>>>>>> Stashed changes
             noFill();
             textSize(50);
             
@@ -224,17 +207,10 @@ void drawGame(){
         default:
           textSize(50);
           
-<<<<<<< Updated upstream
           //text("Uh Oh!");
           textSize(30);
           
           //text("Page has not been found!");
-=======
-          text("Uh Oh!", width/2, height/2);
-          textSize(30);
-          
-          text("Page has not been found!", width/2, height/2);
->>>>>>> Stashed changes
          
     }
     //popStyle();
@@ -242,15 +218,9 @@ void drawGame(){
  
 void updateGame() {
     switch(gamestate){
-<<<<<<< Updated upstream
         case 0:
             if (25-elapsedSecs <= 0){
                     gamestate=2;
-=======
-        case 1:
-            if (25-elapsedSecs <= 0){
-                    gamestate=3;
->>>>>>> Stashed changes
                     timerStarted=false;
             }
             button0.checkPressed();
@@ -272,7 +242,6 @@ void updateGame() {
                 
             } 
             break;
-<<<<<<< Updated upstream
         case 1:
             credits.checkPressed();
             options.checkPressed();
@@ -281,16 +250,6 @@ void updateGame() {
             }
             if(zenMode.checkPressed()){
                 gamestate = 0;
-=======
-        case 2:
-            credits.checkPressed();
-            options.checkPressed();
-            if(actionMode.checkPressed()){
-                gamestate = 1;
-            }
-            if(zenMode.checkPressed()){
-                gamestate = 1;
->>>>>>> Stashed changes
             }
     }
 }
@@ -309,21 +268,12 @@ class menuButton{
     int w;
     int h;
     menuButton(int x, int y, int w, int h){
-<<<<<<< Updated upstream
         /*if(x=="mid"){
             x=width/2-w/2;
         }
         if(y=="mid"){
             y=height/2-h/2;
         }*/
-=======
-//        if(x=="mid"){
-//            x=width/2-w/2;
-//        }
-//        if(y=="mid"){
-//            y=height/2-h/2;
-//        }
->>>>>>> Stashed changes
         this.x = x;
         this.y = y;
         this.w = w;
@@ -334,58 +284,10 @@ class menuButton{
             if(mouseClicked){
                 return true;
             } else {
+                
                 return false;
             }
         }
         return false;
     }
 }
- 
-
-<<<<<<< Updated upstream
-=======
-class Button{
-    int id;
-    int x;
-    int y;
-    int w;
-    int h;
- 
-    button(int tx, int ty, int tw, int th, int tid){
-        this.x = tx;
-        this.y = ty;
-        this.w = tw;
-        this.h = th;
-        this.id = tid;
-    }
-    
-    void draw(){
-        pushStyle();
-        stroke(0);
-        fill(255);
-        if(bArray[id]==true){
-            fill(0,200,250);
-        } else {
-            fill(150,100,255);
-        }
-        rect(x,y,w,h);
-        fill(0);
-        textSize(12);
-        text(id+1,x+w/2, y+h/2, 20, 20);
-        popStyle();
-    }
-    
-    void checkPressed(){
-        if(mouseX>x && mouseX<x+w && mouseY>y && mouseY<y+h){
-            onButton = true;
-            if(mouseClicked){
-                bArray[this.id] = true;
-                
-            } else {
-                bArray[this.id] = false;
-            }
-        }
-    }
-}
-
->>>>>>> Stashed changes
