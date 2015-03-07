@@ -2,7 +2,50 @@
 // http://studio.sketchpad.cc/sp/pad/view/ro.98$Fad5UME48E/rev.1511
  
 //resources
+//Button Class
+class Button{
+    int id;
+    int x;
+    int y;
+    int w;
+    float h;
  
+    Button(int tx, int ty, int tw, float th, int tid){
+        this.x = tx;
+        this.y = ty;
+        this.w = tw;
+        this.h = th;
+        this.id = tid;
+    }
+    
+    void draw(){
+        pushStyle();
+        stroke(0);
+        fill(255);
+        if(bArray[id]==true){
+            fill(0,200,250);
+        } else {
+            fill(150,100,255);
+        }
+        rect(x,y,w,h);
+        fill(0);
+        textSize(12);
+        text(str(id+1),x+w/2, y+h/2, 20, 20);
+        popStyle();
+    }
+    
+    void checkPressed(){
+        if(mouseX>x && mouseX<x+w && mouseY>y && mouseY<y+h){
+            onButton = true;
+            if(mouseClicked){
+                bArray[this.id] = true;
+                
+            } else {
+                bArray[this.id] = false;
+            }
+        }
+    }
+}
  
 //debug mode
  
@@ -21,7 +64,7 @@ boolean buttonsRotating =false;
 
 
 //game buttons
-Button button;
+Button button0;
 Button button1;
 Button button2;
 Button button3;
@@ -78,7 +121,7 @@ int cx = width/4;
 int cy = height/3;
 int goalNum = ceil(random(0, 4));
 int score;
-String gamestate = "menu";
+int gamestate = 1;
  
 void setup() {  // this is run once.   
     
@@ -95,7 +138,7 @@ void setup() {  // this is run once.
     strokeWeight(1);
     
     PImage menu;
-    menu = loadImage("/static/uploaded_resources/p.17470/TargoTap_Menu.jpg");
+    //menu = loadImage("/static/uploaded_resources/p.17470/TargoTap_Menu.jpg");
     
     // button definition
     button0 = new Button(0, height/5, width/2, height/3.33,0);
@@ -129,7 +172,7 @@ void drawGame(){
     fill(0);
     title();
     switch(gamestate){
-        case "game":
+        case 0:
             if(buttonsRotating){
                 pushMatrix();
                 translate(width/2, height/2);
@@ -148,13 +191,13 @@ void drawGame(){
             noFill();
             textSize(30);
             text("Score: "+score,width/2,height-height/8);
-            var time = 25-elapsedSecs;
+            int time = 25-elapsedSecs;
             text("Time: " + time, width/2, 20);
             break;
-        case "menu":
+        case 1:
             //image(loadImage("/static/uploaded_resources/p.17470/TargoTap_Menu.jpg"), 0, 0);
             break;
-        case "gameover":
+        case 2:
             noFill();
             textSize(50);
             
@@ -164,20 +207,20 @@ void drawGame(){
         default:
           textSize(50);
           
-          text("Uh Oh!");
+          //text("Uh Oh!");
           textSize(30);
           
-          text("Page has not been found!");
+          //text("Page has not been found!");
          
     }
-    popStyle();
+    //popStyle();
 }
  
 void updateGame() {
     switch(gamestate){
-        case "game":
+        case 0:
             if (25-elapsedSecs <= 0){
-                    gamestate="gameover";
+                    gamestate=2;
                     timerStarted=false;
             }
             button0.checkPressed();
@@ -199,14 +242,14 @@ void updateGame() {
                 
             } 
             break;
-        case "menu":
+        case 1:
             credits.checkPressed();
             options.checkPressed();
             if(actionMode.checkPressed()){
-                gamestate = "game";
+                gamestate = 0;
             }
             if(zenMode.checkPressed()){
-                gamestate = "game";
+                gamestate = 0;
             }
     }
 }
@@ -225,12 +268,12 @@ class menuButton{
     int w;
     int h;
     menuButton(int x, int y, int w, int h){
-        if(x=="mid"){
+        /*if(x=="mid"){
             x=width/2-w/2;
         }
         if(y=="mid"){
             y=height/2-h/2;
-        }
+        }*/
         this.x = x;
         this.y = y;
         this.w = w;
@@ -239,58 +282,14 @@ class menuButton{
     boolean checkPressed(){
         if(mouseX>x && mouseX<x+w && mouseY>y && mouseY<y+h){
             if(mouseClicked){
-                
                 return true;
             } else {
                 
                 return false;
             }
         }
+        return false;
     }
 }
  
-
-class Button{
-    int id;
-    int x;
-    int y;
-    int w;
-    int h;
- 
-    Button(int tx, int ty, int tw, int th, int tid){
-        this.x = tx;
-        this.y = ty;
-        this.w = tw;
-        this.h = th;
-        this.id = tid;
-    }
-    
-    void draw(){
-        pushStyle();
-        stroke(0);
-        fill(255);
-        if(bArray[id]==true){
-            fill(0,200,250);
-        } else {
-            fill(150,100,255);
-        }
-        rect(x,y,w,h);
-        fill(0);
-        textSize(12);
-        text(id+1,x+w/2, y+h/2, 20, 20);
-        popStyle();
-    }
-    
-    void checkPressed(){
-        if(mouseX>x && mouseX<x+w && mouseY>y && mouseY<y+h){
-            onButton = true;
-            if(mouseClicked){
-                bArray[this.id] = true;
-                
-            } else {
-                bArray[this.id] = false;
-            }
-        }
-    }
-}
 
