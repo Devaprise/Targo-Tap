@@ -2,6 +2,7 @@
 // http://studio.sketchpad.cc/sp/pad/view/ro.98$Fad5UME48E/rev.1511
  
 //resources
+int scal;
 //Button Class
 class Button{
     int id;
@@ -30,8 +31,8 @@ class Button{
         }
         rect(x,y,w,h);
         fill(0);
-        textSize(12*scal);
-        text(str(id+1),x+w/2, y+h/2, 20, 20);
+        textSize(30*scal);
+        text(str(id+1),x, y, w, h);
         popStyle();
     }
     
@@ -159,7 +160,7 @@ int timer(){
     
     return elapsedSecs;
 }
-int scal;
+
 //level variables
 //game variables
 boolean[] bArray = {false, false, false, false};
@@ -210,8 +211,10 @@ void title() {
     if(debugMode){
         text("Targo Tap  bArray:"+bArray, displayWidth/2, displayHeight/7, elapsedSecs);
     } else {
-        text("Targo Tap\n" + str(displayWidth) + ":" + str(displayHeight), displayWidth/2, displayHeight/6);
+        text("Targo Tap", displayWidth/2, displayHeight/6);
     }
+    textSize(70*scal);
+    text("Alpha!",displayWidth/2,displayHeight/6 + ((96*scal)*1.25));
     options.draw();
     credits.draw();
     actionMode.draw();
