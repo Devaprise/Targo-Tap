@@ -58,7 +58,7 @@ boolean debugMode=false;
 //change this to play around with rotation
 
 //ROTATION
-boolean buttonsRotating =false;
+boolean rotateMode = true;
 
 
 
@@ -166,6 +166,11 @@ void title() {
     
 }
 
+void buttonUpdate(Button button, int x, int y){
+  button.x = x;
+  button.y = y;
+}
+
  
 void drawGame(){
     background(backgroundColor);
@@ -173,11 +178,39 @@ void drawGame(){
     title();
     switch(gamestate){
         case 0:
-            if(buttonsRotating){
-                pushMatrix();
-                translate(width/2, height/2);
-                rotate(PI*theta);
-                translate(-width/2,-height/2);
+            /*
+              button0 = new Button(0, height/5, width/2, height/3.33,0);
+              button1 = new Button(width/2, height/5, width/2, height/3.33,1);
+              button2 = new Button(0, height/2, width/2, height/3.33,2);
+              button3 = new Button(width/2, height/2, width/2, height/3.33,3);
+            */
+            if(rotateMode){
+            switch(round(frameCount/10)%4){
+              case 0:
+                buttonUpdate(button0,0,height/5);
+                buttonUpdate(button1,width/2,height/5);
+                buttonUpdate(button2,0,height/2);
+                buttonUpdate(button3,width/2,height/2);
+               break;
+               case 1:
+                buttonUpdate(button0,width/2,height/2);
+                buttonUpdate(button1,0,height/5);
+                buttonUpdate(button2,width/2,height/5);
+                buttonUpdate(button3,0,height/2);
+               break;
+               case 2:
+                buttonUpdate(button0,0,height/2);
+                buttonUpdate(button1,width/2,height/2);
+                buttonUpdate(button2,0,height/5);
+                buttonUpdate(button3,width/2,height/5);
+               break;
+               case 3:
+                buttonUpdate(button0,width/2,height/5);
+                buttonUpdate(button1,0,height/2);
+                buttonUpdate(button2,width/2,height/2);
+                buttonUpdate(button3,0,height/5);
+               break;
+            }
             }
             button0.draw();
             button1.draw();
