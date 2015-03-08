@@ -231,6 +231,7 @@ void drawGame(){
     title();
     switch(gamestate){
         case 0:
+            background(backgroundColor);
             /*
               button0 = new Button(0, height/5, width/2, height/3.33,0);
               button1 = new Button(width/2, height/5, width/2, height/3.33,1);
