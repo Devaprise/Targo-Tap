@@ -31,7 +31,7 @@ class Button{
         }
         rect(x,y,w,h);
         fill(0);
-        textSize(30*scal);
+        textSize(60*scal);
         text(str(id+1),x, y, w, h);
         popStyle();
     }
@@ -274,9 +274,11 @@ void drawGame(){
             button2.draw();
             button3.draw();
             fill(255);
-            rect(displayWidth/2-25, displayHeight/2-25, 50, 50);
+            rectMode(CENTER);
+            rect(displayWidth/2, displayHeight/2, 200, 200);
+            rectMode(CORNER);
             fill(0);
-            textSize(12*scal);
+            textSize(48*scal);
             text(goalNum, displayWidth/2, displayHeight/2);
             noFill();
             textSize(30*scal);
