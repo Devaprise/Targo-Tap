@@ -47,6 +47,54 @@ class Button{
     }
 }
  
+class menuButton{
+    int x;
+    int y;
+    int w;
+    int h;
+    color clr;
+    color fntClr;
+    String txt;
+    menuButton(String txt, color clr, color fntClr, int x, int y, int w, int h){
+        /*if(x=="mid"){
+            x=width/2-w/2;
+        }
+        if(y=="mid"){
+            y=height/2-h/2;
+        }*/
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+        this.txt = txt;
+        this.clr = clr;
+        this.fntClr = fntClr;
+    }
+    boolean checkPressed(){
+        if(mouseX>x && mouseX<x+w && mouseY>y && mouseY<y+h){
+            if(mouseClicked){
+                return true;
+            } else {
+                
+                return false;
+            }
+        }
+        return false;
+    }
+    void draw(){
+        pushStyle();
+        stroke(0);
+        fill(this.clr);
+        noStroke();
+        rect(x,y,w,h);
+        fill(0);
+        textSize(64);
+        textAlign(CENTER,CENTER);
+        fill(this.fntClr);
+        text(this.txt,x, y,w,h);
+        popStyle();
+    }
+}
 //debug mode
  
 boolean debugMode=false;
@@ -148,21 +196,26 @@ void setup() {  // this is run once.
     
     //button4 = new Button(width/1.5, height/2,width/2,height/3.33,3);
     
-    options = new menuButton(0, (height/3)*2, width/2, height/3);
-    credits = new menuButton(width/2, (height/3)*2, width/2, height/3);
-    actionMode = new menuButton(0, height/3, width/2, height/3);
-    zenMode = new menuButton(width/2, height/3, width/2, height/3);
+    options = new menuButton("Options",color(149,211,206),color(7,166,153),0, height - round(height/3.33)-1, width/2, round(height/3.33));
+    credits = new menuButton("Credits",color(239,113,24),color(252,179,126),width/2, height - round(height/3.33)-1, width/2, round(height/3.33));
+    actionMode = new menuButton("Action Mode",color(239,113,24),color(252,179,126),0, height - (round(height/3.33)*2), width/2, round(height/3.33));
+    zenMode = new menuButton("Zen Mode",color(149,211,206),color(7,166,153),width/2, height - (round(height/3.33)*2), width/2, round(height/3.33));
     
 }
 
  
 void title() {
-    textSize(25);
+    textSize(96);
+    fill(7,166,153);
     if(debugMode){
         text("Targo Tap  bArray:"+bArray, width/2, height/7, elapsedSecs);
     } else {
-        text("Targo Tap", width/2, height/7);
+        text("Targo Tap", width/2, height/6);
     }
+    options.draw();
+    credits.draw();
+    actionMode.draw();
+    zenMode.draw();
     
 }
 
@@ -293,34 +346,4 @@ void draw() {  // this is run repeatedly.
     textAlign(CENTER, CENTER);
     mouseClicked=false; //needed to reset the variable
     theta+=0.01;
-}
- 
-class menuButton{
-    int x;
-    int y;
-    int w;
-    int h;
-    menuButton(int x, int y, int w, int h){
-        /*if(x=="mid"){
-            x=width/2-w/2;
-        }
-        if(y=="mid"){
-            y=height/2-h/2;
-        }*/
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
-    }
-    boolean checkPressed(){
-        if(mouseX>x && mouseX<x+w && mouseY>y && mouseY<y+h){
-            if(mouseClicked){
-                return true;
-            } else {
-                
-                return false;
-            }
-        }
-        return false;
-    }
 }
