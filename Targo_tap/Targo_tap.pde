@@ -179,14 +179,14 @@ void setup() {  // this is run once.
     background(backgroundColor);
     
     // canvas size (Variable aren't evaluated. Integers only, please.)
-    boolean device = true;
-    if(device){
+    //boolean device = true;
+    //if(device){
       size(int(displayWidth), int(displayWidth)); 
       scal = round(displayWidth/720);
-    }else{
-      size(360,540);
-      scal=0.5;
-    }
+    //}else{
+    //  size(360,540);
+    //  scal=0.5;
+    //}
     //size(720, 1080);
     
     // limit the number of frames per second
