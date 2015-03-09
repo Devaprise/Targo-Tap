@@ -22,7 +22,7 @@ class Button{
     void draw(){
         pushStyle();
         stroke(0);
-        strokeWeight(scal);
+        strokeWeight(5*scal);
         fill(255);
         if(bArray[id]==true){
             fill(0,200,250);
@@ -242,7 +242,7 @@ void drawGame(){
               button3 = new Button(displayWidth/2, displayHeight/2, displayWidth/2, displayHeight/3.33,3);
             */
             if(rotateMode){
-            switch(round(frameCount/10)%4){
+            switch(round(frameCount/30)%4){
               case 0:
                 buttonUpdate(button0,0,displayHeight/5);
                 buttonUpdate(button1,displayWidth/2,displayHeight/5);
@@ -274,6 +274,8 @@ void drawGame(){
             button2.draw();
             button3.draw();
             fill(255);
+            stroke(0);
+            strokeWeight(5*scal);
             rectMode(CENTER);
             rect(displayWidth/2, displayHeight/2, 200, 200);
             rectMode(CORNER);
