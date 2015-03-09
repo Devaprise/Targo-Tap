@@ -2,7 +2,7 @@
 // http://studio.sketchpad.cc/sp/pad/view/ro.98$Fad5UME48E/rev.1511
  
 //resources
-int scal;
+float scal;
 //Button Class
 class Button{
     int id;
@@ -22,16 +22,17 @@ class Button{
     void draw(){
         pushStyle();
         stroke(0);
-        strokeWeight(5*scal);
+        strokeWeight(10*scal);
         fill(255);
-        if(bArray[id]==true){
+        if(mousePressed&&mouseX>x&&mouseY>y&&mouseX<x+w&&mouseY<y+h){
             fill(0,200,250);
         } else {
             fill(150,100,255);
         }
         rect(x,y,w,h);
         fill(0);
-        textSize(60*scal);
+        textSize(80*scal);
+        textAlign(CENTER,CENTER);
         text(str(id+1),x, y, w, h);
         popStyle();
     }
@@ -59,7 +60,7 @@ class menuButton{
     String txt;
     menuButton(String txt, color clr, color fntClr, int x, int y, int w, int h){
         /*if(x=="mid"){
-            x=displayWidth/2-w/2;
+            x=width/2-w/2;
         }
         if(y=="mid"){
             y=displayHeight/2-h/2;
@@ -127,10 +128,12 @@ menuButton options;
 menuButton credits;
 menuButton actionMode;
 menuButton zenMode;
+menuButton restart;
+menuButton play;
 menuButton[] buttonArray;
  
 boolean onButton = false;
-int buttonCenterX = displayWidth/2;
+int buttonCenterX = width/2;
 float buttonCenterY = displayHeight/3.33;
 color backgroundColor = color(216, 222, 191);
  
@@ -145,21 +148,21 @@ void mousePressed(){
     mouseClicked = true;
 }
 
-int elapsedSecs = 0;
+float elapsedSecs = 0;
 
 //this is changed to true when the game begins
 boolean timerStarted = true;
 
-int timer(){
-    if(timerStarted){
-        elapsedSecs++;
-    }
-    else{
-        elapsedSecs=0;
-    }
+//int timer(){
+    //if(timerStarted){
+    //    elapsedSecs++;
+    //}
+   // else{
+    //    elapsedSecs=0;
+//}
     
-    return elapsedSecs;
-}
+    //return elapsedSecs;
+//}
 
 //level variables
 //game variables
@@ -168,7 +171,7 @@ int cx = displayWidth/4;
 int cy = displayHeight/3;
 int goalNum = ceil(random(0, 4));
 int score;
-int gamestate = 1;
+int gameState = 1;
  
 void setup() {  // this is run once.   
     
@@ -176,12 +179,18 @@ void setup() {  // this is run once.
     background(backgroundColor);
     
     // canvas size (Variable aren't evaluated. Integers only, please.)
-    size(int(displayWidth), int(displayWidth)); 
-    scal = round(displayWidth/720);
+    boolean device = true;
+    if(device){
+      size(int(displayWidth), int(displayWidth)); 
+      scal = round(displayWidth/720);
+    }else{
+      size(360,540);
+      scal=0.5;
+    }
     //size(720, 1080);
     
     // limit the number of frames per second
-    frameRate(FPS);
+    frameRate(60);
     
     // set the displayWidth of the line. 
     strokeWeight(1);
@@ -190,18 +199,19 @@ void setup() {  // this is run once.
     //menu = loadImage("/static/uploaded_resources/p.17470/TargoTap_Menu.jpg");
     
     // button definition
-    button0 = new Button(0, displayHeight/5, displayWidth/2, displayHeight/3.33,0);
-    button1 = new Button(displayWidth/2, displayHeight/5, displayWidth/2, displayHeight/3.33,1);
-    button2 = new Button(0, displayHeight/2, displayWidth/2, displayHeight/3.33,2);
-    button3 = new Button(displayWidth/2, displayHeight/2, displayWidth/2, displayHeight/3.33,3);
+    button0 = new Button(0, height/5, width/2, height/3.33,0);
+    button1 = new Button(width/2, height/5, width/2, height/3.33,1);
+    button2 = new Button(0, height/2, width/2, height/3.33,2);
+    button3 = new Button(width/2, height/2, width/2, height/3.33,3);
     
-    //button4 = new Button(displayWidth/1.5, displayHeight/2,displayWidth/2,displayHeight/3.33,3);
+    //button4 = new Button(width/1.5, height/2,width/2,height/3.33,3);
     
-    options = new menuButton("Options",color(149,211,206),color(7,166,153),0, displayHeight - round(displayHeight/3.33)-1, displayWidth/2, round(displayHeight/3.33));
-    credits = new menuButton("Credits",color(239,113,24),color(252,179,126),displayWidth/2, displayHeight - round(displayHeight/3.33)-1, displayWidth/2, round(displayHeight/3.33));
-    actionMode = new menuButton("Action Mode",color(239,113,24),color(252,179,126),0, displayHeight - (round(displayHeight/3.33)*2), displayWidth/2, round(displayHeight/3.33));
-    zenMode = new menuButton("Zen Mode",color(149,211,206),color(7,166,153),displayWidth/2, displayHeight - (round(displayHeight/3.33)*2), displayWidth/2, round(displayHeight/3.33));
-    
+    options = new menuButton("Options",color(149,211,206),color(7,166,153),0, height - round(height/3.33)-1, width/2, round(height/3.33));
+    credits = new menuButton("Credits",color(239,113,24),color(252,179,126),width/2, height - round(height/3.33)-1, width/2, round(height/3.33));
+    actionMode = new menuButton("Action Mode",color(239,113,24),color(252,179,126),0, height - (round(height/3.33)*2), width/2, round(height/3.33));
+    zenMode = new menuButton("Zen Mode",color(149,211,206),color(7,166,153),width/2, height - (round(height/3.33)*2), width/2, round(height/3.33));
+    restart = new menuButton("Restart",color(149,211,206),color(7,166,153),width/4,round(height/1.5),width/2,height/6);
+    play = new menuButton("Play Targo Tap",color(157, 209, 148),color(8, 166, 24),0, height - (round(height/3.33)*2), width, round(height/3.33));
 }
 
  
@@ -209,84 +219,87 @@ void title() {
     textSize(96*scal);
     fill(7,166,153);
     if(debugMode){
-        text("Targo Tap  bArray:"+bArray, displayWidth/2, displayHeight/7, elapsedSecs);
+        text("Targo Tap  bArray:"+bArray, width/2, height/7, elapsedSecs);
     } else {
-        text("Targo Tap", displayWidth/2, displayHeight/6);
+        text("Targo Tap", width/2, height/6);
     }
     textSize(70*scal);
-    text("Alpha!",displayWidth/2,displayHeight/6 + ((96*scal)*1.25));
+    text("Alpha!",width/2,height/6 + ((96*scal)*1.25));
     options.draw();
     credits.draw();
-    actionMode.draw();
-    zenMode.draw();
+    play.draw();
     
 }
 
-void buttonUpdate(Button button, int x, int y){
-  button.x = x;
-  button.y = y;
+void buttonUpdate(Button button, int id){
+  button.id = id;
 }
-
- 
+int lastTime;
+int startTime;
 void drawGame(){
     background(backgroundColor);
     fill(0);
     title();
-    switch(gamestate){
+    switch(gameState){
         case 0:
             background(backgroundColor);
             /*
-              button0 = new Button(0, displayHeight/5, displayWidth/2, displayHeight/3.33,0);
-              button1 = new Button(displayWidth/2, displayHeight/5, displayWidth/2, displayHeight/3.33,1);
-              button2 = new Button(0, displayHeight/2, displayWidth/2, displayHeight/3.33,2);
-              button3 = new Button(displayWidth/2, displayHeight/2, displayWidth/2, displayHeight/3.33,3);
+              button0 = new Button(0, height/5, width/2, height/3.33,0);
+              button1 = new Button(width/2, height/5, width/2, height/3.33,1);
+              button2 = new Button(0, height/2, width/2, height/3.33,2);
+              button3 = new Button(width/2, height/2, width/2, height/3.33,3);
             */
-            if(rotateMode){
-            switch(round(frameCount/30)%4){
+            if(rotateMode && round(frameCount/10)%4 != lastTime){
+            switch(round(millis()/500)%4){
               case 0:
-                buttonUpdate(button0,0,displayHeight/5);
-                buttonUpdate(button1,displayWidth/2,displayHeight/5);
-                buttonUpdate(button2,0,displayHeight/2);
-                buttonUpdate(button3,displayWidth/2,displayHeight/2);
+                buttonUpdate(button0,0);
+                buttonUpdate(button1,1);
+                buttonUpdate(button2,2);
+                buttonUpdate(button3,3);
                break;
                case 1:
-                buttonUpdate(button0,displayWidth/2,displayHeight/2);
-                buttonUpdate(button1,0,displayHeight/5);
-                buttonUpdate(button2,displayWidth/2,displayHeight/5);
-                buttonUpdate(button3,0,displayHeight/2);
+                buttonUpdate(button0,3);
+                buttonUpdate(button1,0);
+                buttonUpdate(button2,1);
+                buttonUpdate(button3,2);
                break;
                case 2:
-                buttonUpdate(button0,0,displayHeight/2);
-                buttonUpdate(button1,displayWidth/2,displayHeight/2);
-                buttonUpdate(button2,0,displayHeight/5);
-                buttonUpdate(button3,displayWidth/2,displayHeight/5);
+                buttonUpdate(button0,2);
+                buttonUpdate(button1,3);
+                buttonUpdate(button2,0);
+                buttonUpdate(button3,1);
                break;
                case 3:
-                buttonUpdate(button0,displayWidth/2,displayHeight/5);
-                buttonUpdate(button1,0,displayHeight/2);
-                buttonUpdate(button2,displayWidth/2,displayHeight/2);
-                buttonUpdate(button3,0,displayHeight/5);
+                buttonUpdate(button0,1);
+                buttonUpdate(button1,2);
+                buttonUpdate(button2,3);
+                buttonUpdate(button3,0);
                break;
             }
             }
+            lastTime = round(frameCount/10)%4;
             button0.draw();
             button1.draw();
             button2.draw();
             button3.draw();
             fill(255);
-            stroke(0);
-            strokeWeight(5*scal);
             rectMode(CENTER);
-            rect(displayWidth/2, displayHeight/2, 200, 200);
+            strokeWeight(10*scal);
+            rect(width/2, height/2, 150*scal, 150*scal);
             rectMode(CORNER);
             fill(0);
             textSize(48*scal);
-            text(goalNum, displayWidth/2, displayHeight/2);
+            textAlign(CENTER,CENTER);
+            text(goalNum, width/2, height/2);
             noFill();
             textSize(30*scal);
-            text("Score: "+score,displayWidth/2,displayHeight-displayHeight/8);
-            int time = 25-elapsedSecs;
-            text("Time: " + time, displayWidth/2, 20);
+            text("Score: "+score,width/2,height-height/8);
+            int time = (round(startTime/1000)+25) - round(millis()/1000);
+            if(time <= 0){
+              gameState = 2;
+              return;
+            }
+            text("Time: " + round(time), width/2, 20);
             break;
         case 1:
             //image(loadImage("/static/uploaded_resources/p.17470/TargoTap_Menu.jpg"), 0, 0);
@@ -294,9 +307,11 @@ void drawGame(){
         case 2:
             noFill();
             textSize(50);
-            
-            text("Score: "+score,displayWidth/2,displayHeight/2);
-            text("Game Over",displayWidth/2,displayHeight/3);
+            background(backgroundColor);
+            textAlign(CENTER,CENTER);
+            text("Score: "+score,width/2,height/2);
+            text("Game Over",width/2,height/2.5);
+            restart.draw();
             break;
         default:
           textSize(50);
@@ -311,10 +326,10 @@ void drawGame(){
 }
  
 void updateGame() {
-    switch(gamestate){
+    switch(gameState){
         case 0:
             if (25-elapsedSecs <= 0){
-                    gamestate=2;
+                    gameState=2;
                     timerStarted=false;
             }
             button0.checkPressed();
@@ -339,12 +354,27 @@ void updateGame() {
         case 1:
             credits.checkPressed();
             options.checkPressed();
-            if(actionMode.checkPressed()){
-                gamestate = 0;
+            /*if(actionMode.checkPressed()){
+                gameState = 0;
+                startTime = millis();
             }
             if(zenMode.checkPressed()){
-                gamestate = 0;
+                gameState = 0;
+                startTime = millis();
+            }*/
+            if(play.checkPressed()){
+               gameState = 0;
+               startTime = millis();
+               score = 0;
             }
+         break;
+         case 2:
+           if(restart.checkPressed()){
+             gameState = 0;
+             startTime = millis();
+             score = 0;
+           }
+         break;
     }
 }
  
