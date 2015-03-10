@@ -240,7 +240,7 @@ void drawGame(){
     title();
     switch(gameState){
         case 0:
-            int time = (round(startTime/1000)+25) - round(millis()/1000);
+            int time = (round(startTime/1000)+30) - round(millis()/1000);
             if(time <= 0){
                gameState = 2;
                return;
@@ -356,7 +356,7 @@ void updateGame() {
             if(c){return;}
             boolean d = button3.checkPressed();
             if(d){return;}
-            if(!a&&!b&&!c&&!d){
+            if(!a&&!b&&!c&&!d&&score>0){
               score--;
             }
         break;
