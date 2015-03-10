@@ -92,6 +92,7 @@ class menuButton{
     color clr;
     color fntClr;
     String txt;
+    boolean isOn = false;
     menuButton(String txt, color clr, color fntClr, int x, int y, int w, int h){
         /*if(x=="mid"){
             x=width/2-w/2;
@@ -108,7 +109,7 @@ class menuButton{
         this.fntClr = fntClr;
     }
     boolean checkPressed(){
-        if(mouseX>x && mouseX<x+w && mouseY>y && mouseY<y+h){
+        if(mouseX>x && mouseY>y&&mouseX<x+w&&mouseY<y+h){
             if(true){
                 return true;
             } else {
@@ -119,15 +120,28 @@ class menuButton{
         return false;
     }
     void draw(){
+        if(mouseX>x&&mouseY>y&&mouseX<x+w&&mouseY<y+h&&mousePressed){
+            this.isOn = true;
+        }else{
+            this.isOn = false;
+        }
         pushStyle();
         stroke(0);
-        fill(this.clr);
+        if(this.isOn){
+          fill(this.fntClr);
+        }else{
+          fill(this.clr);
+        }
         noStroke();
         rect(x,y,w,h);
         fill(0);
         textSize(64*scal);
         textAlign(CENTER,CENTER);
-        fill(this.fntClr);
+        if(this.isOn){
+          fill(this.clr);
+        }else{
+          fill(this.fntClr);
+        }
         text(this.txt,x, y,w,h);
         popStyle();
     }
@@ -203,7 +217,7 @@ void setup() {  // this is run once.
     //button4 = new Button(width/1.5, height/2,width/2,height/3.33,3);
     
     options = new menuButton("Options",color(149,211,206),color(7,166,153),0, height - round(height/3.33)-1, width/2, round(height/3.33));
-    credits = new menuButton("Credits",color(239,113,24),color(252,179,126),width/2, height - round(height/3.33)-1, width/2, round(height/3.33));
+    credits = new menuButton("Credits",color(252,179,126),color(239,113,24),width/2, height - round(height/3.33)-1, width/2, round(height/3.33));
     actionMode = new menuButton("Action Mode",color(239,113,24),color(252,179,126),0, height - (round(height/3.33)*2), width/2, round(height/3.33));
     zenMode = new menuButton("Zen Mode",color(149,211,206),color(7,166,153),width/2, height - (round(height/3.33)*2), width/2, round(height/3.33));
     restart = new menuButton("Restart",color(149,211,206),color(7,166,153),0,round(height/1.5),width/2,height/6);
