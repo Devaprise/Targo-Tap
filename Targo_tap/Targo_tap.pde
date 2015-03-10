@@ -40,7 +40,7 @@ class Button{
     void checkPressed(){
         if(mouseX>x && mouseX<x+w && mouseY>y && mouseY<y+h){
             onButton = true;
-            if(mouseClicked){
+            if(true){
                 bArray[this.id] = true;
                 
             } else {
@@ -75,7 +75,7 @@ class menuButton{
     }
     boolean checkPressed(){
         if(mouseX>x && mouseX<x+w && mouseY>y && mouseY<y+h){
-            if(mouseClicked){
+            if(true){
                 return true;
             } else {
                 
@@ -138,15 +138,10 @@ float buttonCenterY = displayHeight/3.33;
 color backgroundColor = color(216, 222, 191);
  
 int FPS = 60;
-boolean mouseClicked = false;
 
 //rotation amount
 int theta = 0;
 
- 
-void mousePressed(){
-    mouseClicked = true;
-}
 
 float elapsedSecs = 0;
 
@@ -237,11 +232,17 @@ void buttonUpdate(Button button, int id){
 int lastTime;
 int startTime;
 void drawGame(){
+    
     background(backgroundColor);
     fill(0);
     title();
     switch(gameState){
         case 0:
+            int time = (round(startTime/1000)+25) - round(millis()/1000);
+            if(time <= 0){
+               gameState = 2;
+               return;
+            }
             background(backgroundColor);
             /*
               button0 = new Button(0, height/5, width/2, height/3.33,0);
@@ -291,22 +292,16 @@ void drawGame(){
             textSize(48*scal);
             textAlign(CENTER,CENTER);
             text(goalNum, width/2, height/2);
-            noFill();
-            textSize(30*scal);
-            text("Score: "+score,width/2,height-height/8);
-            int time = (round(startTime/1000)+25) - round(millis()/1000);
-            if(time <= 0){
-              gameState = 2;
-              return;
-            }
-            text("Time: " + round(time), width/2, 20);
+            textAlign(CENTER,TOP);
+            textSize(50*scal);
+            text("Time: " + round(time) + "\n\nScore: "+score,width/2,20*scal);
             break;
         case 1:
             //image(loadImage("/static/uploaded_resources/p.17470/TargoTap_Menu.jpg"), 0, 0);
             break;
         case 2:
             noFill();
-            textSize(50);
+            textSize(80*scal);
             background(backgroundColor);
             textAlign(CENTER,CENTER);
             text("Score: "+score,width/2,height/2);
@@ -328,10 +323,6 @@ void drawGame(){
 void updateGame() {
     switch(gameState){
         case 0:
-            if (25-elapsedSecs <= 0){
-                    gameState=2;
-                    timerStarted=false;
-            }
             button0.checkPressed();
             button1.checkPressed();
             button2.checkPressed();
@@ -341,14 +332,15 @@ void updateGame() {
                 int newNum=goalNum;
                 while(newNum==goalNum){
                     newNum=ceil(random(0,4));
-                };
+                }
                 goalNum=newNum;
-            } else if(mouseClicked){
+                return;
+            } else if(true){
                 score--;
                 if (score < 0) {
                     score = 0;
                 }
-                
+                return;
             } 
             break;
         case 1:
@@ -366,6 +358,7 @@ void updateGame() {
                gameState = 0;
                startTime = millis();
                score = 0;
+               return;
             }
          break;
          case 2:
@@ -373,15 +366,17 @@ void updateGame() {
              gameState = 0;
              startTime = millis();
              score = 0;
+             return;
            }
          break;
     }
 }
  
 void draw() {  // this is run repeatedly.  
-    updateGame();
     drawGame();
     textAlign(CENTER, CENTER);
-    mouseClicked=false; //needed to reset the variable
     theta+=0.01;
+}
+void mouseReleased() {
+  updateGame();
 }
