@@ -3,6 +3,31 @@
  
 //resources
 float scal;
+boolean onButton = false;
+int buttonCenterX = width/2;
+float buttonCenterY = displayHeight/3.33;
+color backgroundColor = color(216, 222, 191);
+ 
+int FPS = 60;
+
+//rotation amount
+int theta = 0;
+
+
+float elapsedSecs = 0;
+
+//this is changed to true when the game begins
+boolean timerStarted = true;
+
+//level variables
+//game variables
+boolean[] bArray = {false, false, false, false};
+int cx = displayWidth/4;
+int cy = displayHeight/3;
+int goalNum = ceil(random(0, 4));
+int score;
+int gameState = 1;
+int cycleState = 0;
 //Button Class
 class Button{
     int id;
@@ -37,16 +62,20 @@ class Button{
         popStyle();
     }
     
-    void checkPressed(){
+    boolean checkPressed(){
         if(mouseX>x && mouseX<x+w && mouseY>y && mouseY<y+h){
-            onButton = true;
-            if(true){
-                bArray[this.id] = true;
-                
-            } else {
-                bArray[this.id] = false;
-            }
+             if(this.id+1 == goalNum){
+               int oldGN = int(goalNum);
+               goalNum = ceil(random(0,4));
+               while(goalNum == oldGN){
+                 goalNum = ceil(random(0,4));
+               }
+               score++;
+               cycleState++;
+               return true;
+             }
         }
+        return false;
     }
 }
  
@@ -129,44 +158,11 @@ menuButton credits;
 menuButton actionMode;
 menuButton zenMode;
 menuButton restart;
+menuButton menu_button;
 menuButton play;
 menuButton[] buttonArray;
  
-boolean onButton = false;
-int buttonCenterX = width/2;
-float buttonCenterY = displayHeight/3.33;
-color backgroundColor = color(216, 222, 191);
- 
-int FPS = 60;
 
-//rotation amount
-int theta = 0;
-
-
-float elapsedSecs = 0;
-
-//this is changed to true when the game begins
-boolean timerStarted = true;
-
-//int timer(){
-    //if(timerStarted){
-    //    elapsedSecs++;
-    //}
-   // else{
-    //    elapsedSecs=0;
-//}
-    
-    //return elapsedSecs;
-//}
-
-//level variables
-//game variables
-boolean[] bArray = {false, false, false, false};
-int cx = displayWidth/4;
-int cy = displayHeight/3;
-int goalNum = ceil(random(0, 4));
-int score;
-int gameState = 1;
  
 void setup() {  // this is run once.   
     
@@ -205,7 +201,8 @@ void setup() {  // this is run once.
     credits = new menuButton("Credits",color(239,113,24),color(252,179,126),width/2, height - round(height/3.33)-1, width/2, round(height/3.33));
     actionMode = new menuButton("Action Mode",color(239,113,24),color(252,179,126),0, height - (round(height/3.33)*2), width/2, round(height/3.33));
     zenMode = new menuButton("Zen Mode",color(149,211,206),color(7,166,153),width/2, height - (round(height/3.33)*2), width/2, round(height/3.33));
-    restart = new menuButton("Restart",color(149,211,206),color(7,166,153),width/4,round(height/1.5),width/2,height/6);
+    restart = new menuButton("Restart",color(149,211,206),color(7,166,153),0,round(height/1.5),width/2,height/6);
+    menu_button = new menuButton("Menu",color(207,206,147),color(166,163,8),round(width/2),round(height/1.5),width/2,height/6);
     play = new menuButton("Play Targo Tap",color(157, 209, 148),color(8, 166, 24),0, height - (round(height/3.33)*2), width, round(height/3.33));
 }
 
@@ -250,8 +247,8 @@ void drawGame(){
               button2 = new Button(0, height/2, width/2, height/3.33,2);
               button3 = new Button(width/2, height/2, width/2, height/3.33,3);
             */
-            if(rotateMode && round(frameCount/10)%4 != lastTime){
-            switch(round(millis()/500)%4){
+            if(rotateMode){
+            switch(cycleState%4){
               case 0:
                 buttonUpdate(button0,0);
                 buttonUpdate(button1,1);
@@ -278,7 +275,7 @@ void drawGame(){
                break;
             }
             }
-            lastTime = round(frameCount/10)%4;
+            //lastTime = round(frameCount/10)%4;
             button0.draw();
             button1.draw();
             button2.draw();
@@ -294,7 +291,7 @@ void drawGame(){
             text(goalNum, width/2, height/2);
             textAlign(CENTER,TOP);
             textSize(50*scal);
-            text("Time: " + round(time) + "\n\nScore: "+score,width/2,20*scal);
+            text("Time: " + round(time) + "\n\nScore: "+score,width/2,20*(height/1080));
             break;
         case 1:
             //image(loadImage("/static/uploaded_resources/p.17470/TargoTap_Menu.jpg"), 0, 0);
@@ -304,9 +301,10 @@ void drawGame(){
             textSize(80*scal);
             background(backgroundColor);
             textAlign(CENTER,CENTER);
-            text("Score: "+score,width/2,height/2);
-            text("Game Over",width/2,height/2.5);
+            text("Score: "+score,width/2,height/2.55);
+            text("Game Over",width/2,height/3.25);
             restart.draw();
+            menu_button.draw();
             break;
         default:
           textSize(50);
@@ -323,7 +321,7 @@ void drawGame(){
 void updateGame() {
     switch(gameState){
         case 0:
-            button0.checkPressed();
+            /*button0.checkPressed();
             button1.checkPressed();
             button2.checkPressed();
             button3.checkPressed();
@@ -333,16 +331,30 @@ void updateGame() {
                 while(newNum==goalNum){
                     newNum=ceil(random(0,4));
                 }
+                bArray[goalNum-1] = false;
                 goalNum=newNum;
+                cycleState++;
                 return;
-            } else if(true){
+            } else if(mousePressed){
                 score--;
                 if (score < 0) {
                     score = 0;
                 }
+                cycleState++;
                 return;
-            } 
-            break;
+            } */
+            boolean a = button0.checkPressed();
+            if(a){return;}
+            boolean b = button1.checkPressed();
+            if(b){return;}
+            boolean c = button2.checkPressed();
+            if(c){return;}
+            boolean d = button3.checkPressed();
+            if(d){return;}
+            if(!a&&!b&&!c&&!d){
+              score--;
+            }
+        break;
         case 1:
             credits.checkPressed();
             options.checkPressed();
@@ -359,6 +371,12 @@ void updateGame() {
                startTime = millis();
                score = 0;
                return;
+            }
+            if(menu_button.checkPressed()){
+              gameState = 1;
+              startTime = -1;
+              score = 0;
+              return;
             }
          break;
          case 2:
