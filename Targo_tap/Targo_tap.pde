@@ -1,5 +1,10 @@
 // This sketch builds on a prior work, "Targo Tap", created by Virus & Micah Canfield & Wes
 // http://studio.sketchpad.cc/sp/pad/view/ro.98$Fad5UME48E/rev.1511
+// Most of it was edited by Snakebyte now, though.
+
+/**
+  Hello application uncompiler, source code searcher or someone else!
+**/
  
 //resources
 float scal;
@@ -372,12 +377,6 @@ void updateGame() {
                score = 0;
                return;
             }
-            if(menu_button.checkPressed()){
-              gameState = 1;
-              startTime = -1;
-              score = 0;
-              return;
-            }
          break;
          case 2:
            if(restart.checkPressed()){
@@ -386,6 +385,12 @@ void updateGame() {
              score = 0;
              return;
            }
+           if(menu_button.checkPressed()){
+              gameState = 1;
+              startTime = -1;
+              score = 0;
+              return;
+            }
          break;
     }
 }
