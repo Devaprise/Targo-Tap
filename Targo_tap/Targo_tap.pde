@@ -13,7 +13,7 @@ int buttonCenterX = width/2;
 float buttonCenterY = displayHeight/3.33;
 color backgroundColor = color(216, 222, 191);
  
-int FPS = 60;
+int FPS = 120;
 
 //rotation amount
 int theta = 0;
@@ -40,29 +40,36 @@ class Button{
     int y;
     int w;
     float h;
+    color clr;
+    color fntClr;
  
-    Button(int tx, int ty, int tw, float th, int tid){
+    Button(color fntClr, color clr, int tx, int ty, int tw, float th, int tid){
         this.x = tx;
         this.y = ty;
         this.w = tw;
         this.h = th;
         this.id = tid;
+        this.clr = clr;
+        this.fntClr = fntClr;
     }
     
     void draw(){
         pushStyle();
-        stroke(0);
-        strokeWeight(10*scal);
-        fill(255);
+        noStroke();
         if(mousePressed&&mouseX>x&&mouseY>y&&mouseX<x+w&&mouseY<y+h){
-            fill(0,200,250);
+            fill(fntClr);
         } else {
-            fill(150,100,255);
+            fill(clr);
         }
         rect(x,y,w,h);
         fill(0);
         textSize(80*scal);
         textAlign(CENTER,CENTER);
+        if(mousePressed&&mouseX>x&&mouseY>y&&mouseX<x+w&&mouseY<y+h){
+            fill(clr);
+        } else {
+            fill(fntClr);
+        }
         text(str(id+1),x, y, w, h);
         popStyle();
     }
@@ -146,6 +153,34 @@ class menuButton{
         popStyle();
     }
 }
+
+class lostPoint {
+  int lifeStart = millis();
+  int lifetime = 0;
+  int lifespan = 2;//in seconds
+  int x;
+  int y;
+  float acc = 0.5;
+  float vel = 0;
+  boolean shouldRemove = false;
+  lostPoint(int x, int y){
+    this.x = x;
+    this.y = y;
+  }
+  void draw() {
+    vel += acc;
+    if(round(((float(lifetime - lifeStart)/1000)/2)*255) >= 256){
+      this.shouldRemove = true;
+    }
+    lifetime = millis();
+    textAlign(CENTER,CENTER);
+    textSize(60*scal);
+    fill(255,0,0,255 - round(((float(lifetime - lifeStart)/1000)/2)*255));
+    text("-1",x,y);
+    y += (height/720)*int(vel);
+    lifetime = millis() - lifeStart;
+  }
+}
 //debug mode
  
 boolean debugMode=false;
@@ -209,10 +244,10 @@ void setup() {  // this is run once.
     //menu = loadImage("/static/uploaded_resources/p.17470/TargoTap_Menu.jpg");
     
     // button definition
-    button0 = new Button(0, height/5, width/2, height/3.33,0);
-    button1 = new Button(width/2, height/5, width/2, height/3.33,1);
-    button2 = new Button(0, height/2, width/2, height/3.33,2);
-    button3 = new Button(width/2, height/2, width/2, height/3.33,3);
+    button0 = new Button(color(8, 19, 166),color(149, 148, 209),0, height/5, width/2, height/3.33,0);
+    button1 = new Button(color(166, 8, 8),color(207, 147, 147),width/2, height/5, width/2, height/3.33,1);
+    button2 = new Button(color(166, 8, 8),color(207, 147, 147),0, height/2, width/2, height/3.33,2);
+    button3 = new Button(color(8, 19, 166),color(149, 148, 209),width/2, height/2, width/2, height/3.33,3);
     
     //button4 = new Button(width/1.5, height/2,width/2,height/3.33,3);
     
@@ -247,6 +282,7 @@ void buttonUpdate(Button button, int id){
 }
 int lastTime;
 int startTime;
+ArrayList<lostPoint> lostPoints = new ArrayList<lostPoint>();
 void drawGame(){
     
     background(backgroundColor);
@@ -301,8 +337,8 @@ void drawGame(){
             button3.draw();
             fill(255);
             rectMode(CENTER);
-            strokeWeight(10*scal);
-            rect(width/2, height/2, 150*scal, 150*scal);
+            noStroke();
+            rect(width/2, height/2, 150*scal, 150*scal,100*scal);
             rectMode(CORNER);
             fill(0);
             textSize(48*scal);
@@ -311,6 +347,17 @@ void drawGame(){
             textAlign(CENTER,TOP);
             textSize(50*scal);
             text("Time: " + round(time) + "\n\nScore: "+score,width/2,20*(height/1080));
+            for(lostPoint lp : lostPoints){
+              if(lp.shouldRemove == false){
+                lp.draw();
+              }
+            }
+            for (int i = lostPoints.size() - 1; i >= 0; i--) {
+              lostPoint lp = lostPoints.get(i);
+              if(lp.shouldRemove == true){
+                lostPoints.remove(i);  
+              }
+            }
             break;
         case 1:
             //image(loadImage("/static/uploaded_resources/p.17470/TargoTap_Menu.jpg"), 0, 0);
@@ -370,8 +417,11 @@ void updateGame() {
             if(c){return;}
             boolean d = button3.checkPressed();
             if(d){return;}
-            if(!a&&!b&&!c&&!d&&score>0){
-              score--;
+            if(!a&&!b&&!c&&!d){
+              if(score>0){
+                score--;
+              }
+              lostPoints.add(new lostPoint(mouseX,mouseY));
             }
         break;
         case 1:
