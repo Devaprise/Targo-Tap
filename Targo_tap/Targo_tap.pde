@@ -9,8 +9,6 @@
 //resources
 float scal;
 boolean onButton = false;
-int buttonCenterX = width/2;
-float buttonCenterY = displayHeight/3.33;
 color backgroundColor = color(216, 222, 191);
  
 int FPS = 120;
@@ -168,7 +166,7 @@ class lostPoint {
     this.y = y;
   }
   void draw() {
-    vel += acc;
+    this.vel += this.acc;
     if(round(((float(lifetime - lifeStart)/1000)/2)*255) >= 256){
       this.shouldRemove = true;
     }
@@ -177,7 +175,7 @@ class lostPoint {
     textSize(60*scal);
     fill(255,0,0,255 - round(((float(lifetime - lifeStart)/1000)/2)*255));
     text("-1",x,y);
-    y += (height/720)*int(vel);
+    this.y += (height/720)*int(vel);
     lifetime = millis() - lifeStart;
   }
 }
@@ -215,6 +213,8 @@ menuButton restart;
 menuButton menu_button;
 menuButton play;
 menuButton[] buttonArray;
+menuButton menu_options;
+menuButton menu_credits;
  
 
  
@@ -226,10 +226,11 @@ void setup() {  // this is run once.
     // canvas size (Variable aren't evaluated. Integers only, please.)
     //boolean device = true;
     //if(device){
-      size(int(displayWidth), int(displayWidth)); 
-      scal = round(displayWidth/720);
+      //size(int(displayWidth), int(displayWidth)); 
+      //scal = round(width/720);
     //}else{
-    //  size(360,540);
+      size(360,540);
+      scal = 0.5;
     //  scal=0.5;
     //}
     //size(720, 1080);
@@ -258,6 +259,8 @@ void setup() {  // this is run once.
     restart = new menuButton("Restart",color(149,211,206),color(7,166,153),0,round(height/1.5),width/2,height/6);
     menu_button = new menuButton("Menu",color(207,206,147),color(166,163,8),round(width/2),round(height/1.5),width/2,height/6);
     play = new menuButton("Play Targo Tap",color(157, 209, 148),color(8, 166, 24),0, height - (round(height/3.33)*2), width, round(height/3.33));
+    menu_options = new menuButton("Menu",color(207,206,147),color(166,163,8),0,height - (height/6),width,height/6);
+    menu_credits = new menuButton("Menu",color(207,206,147),color(166,163,8),0,height - (height/6),width,height/6);
 }
 
  
@@ -284,7 +287,6 @@ int lastTime;
 int startTime;
 ArrayList<lostPoint> lostPoints = new ArrayList<lostPoint>();
 void drawGame(){
-    
     background(backgroundColor);
     fill(0);
     title();
@@ -360,7 +362,6 @@ void drawGame(){
             }
             break;
         case 1:
-            //image(loadImage("/static/uploaded_resources/p.17470/TargoTap_Menu.jpg"), 0, 0);
             break;
         case 2:
             noFill();
@@ -372,6 +373,22 @@ void drawGame(){
             restart.draw();
             menu_button.draw();
             break;
+        case 3:
+          background(backgroundColor);
+          textAlign(CENTER,TOP);
+          fill(0);
+          textSize(80*scal);
+          text("Options",width/2,scal*10);
+          menu_options.draw();
+        break;
+        case 4:
+          background(backgroundColor);
+          textAlign(CENTER,TOP);
+          fill(0);
+          textSize(80*scal);
+          text("Options",width/2,scal*10);
+          menu_credits.draw();
+        break;
         default:
           textSize(50);
           
@@ -426,7 +443,12 @@ void updateGame() {
         break;
         case 1:
             credits.checkPressed();
-            options.checkPressed();
+            if(options.checkPressed()){
+                gameState = 3;
+                startTime = -1;
+                score = 0;
+                return;
+            }
             /*if(actionMode.checkPressed()){
                 gameState = 0;
                 startTime = millis();
@@ -450,6 +472,14 @@ void updateGame() {
              return;
            }
            if(menu_button.checkPressed()){
+              gameState = 1;
+              startTime = -1;
+              score = 0;
+              return;
+            }
+         break;
+         case 3:
+           if(menu_options.checkPressed()){
               gameState = 1;
               startTime = -1;
               score = 0;

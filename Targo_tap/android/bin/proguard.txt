@@ -1,0 +1,3 @@
+# view AndroidManifest.xml #generated:1
+-keep class processing.test.targo_tap.Targo_tap { <init>(...); }
+
