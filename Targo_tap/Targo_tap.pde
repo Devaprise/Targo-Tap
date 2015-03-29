@@ -226,8 +226,13 @@ void setup() {  // this is run once.
     // canvas size (Variable aren't evaluated. Integers only, please.)
     //boolean device = true;
     //if(device){
+<<<<<<< HEAD
       //size(int(displayWidth), int(displayWidth)); 
       //scal = round(width/720);
+=======
+      size(720, 1080); 
+      scal = round(width/720);
+>>>>>>> origin/master
     //}else{
       size(360,540);
       scal = 0.5;
