@@ -5,6 +5,11 @@
 /**
   Hello application uncompiler, source code searcher or someone else!
 **/
+
+import ddf.minim.*;
+
+AudioPlayer player;
+Minim minim;//audio context
  
 //resources
 float scal;
@@ -210,13 +215,17 @@ menuButton play;
 menuButton[] buttonArray;
 menuButton menu_options;
 menuButton menu_credits;
+menuButton option_music;
+menuButton menu;
  
-
+String music = "enabled"; //Enable or disable music
  
 void setup() {  // this is run once.   
     
     // set the background color
     background(backgroundColor);
+    
+      minim = new Minim(this);
     
     // canvas size (Variable aren't evaluated. Integers only, please.)
     //boolean device = true;
@@ -258,6 +267,9 @@ void setup() {  // this is run once.
     play = new menuButton("Play Targo Tap",color(157, 209, 148),color(8, 166, 24),0, height - (round(height/3.33)*2), width, round(height/3.33));
     menu_options = new menuButton("Menu",color(207,206,147),color(166,163,8),0,height - (height/6),width,height/6);
     menu_credits = new menuButton("Menu",color(207,206,147),color(166,163,8),0,height - (height/6),width,height/6);
+    option_music = new menuButton("Music is " + music,color(157, 209, 148),color(8, 166, 24),round(width*0.1),round(height/2) - round(round(height/6)/2),round(width*0.8),height/6);
+    //red = color(207, 149, 149),color(166, 8, 8)
+    //green = color(157, 209, 148),color(8, 166, 24)
 }
 
  
@@ -292,6 +304,7 @@ void drawGame(){
             int time = (round(startTime/1000)+30) - round(millis()/1000);
             if(time <= 0){
                gameState = 2;
+               stop();
                return;
             }
             background(backgroundColor);
@@ -334,18 +347,20 @@ void drawGame(){
             button1.draw();
             button2.draw();
             button3.draw();
-            fill(255);
+            fill(0);
             rectMode(CENTER);
             noStroke();
-            rect(width/2, height/2, 150*scal, 150*scal,100*scal);
+            rect(width/2, height/2, 150*scal, 150*scal);
             rectMode(CORNER);
-            fill(0);
-            textSize(48*scal);
+            fill(255);
+            textSize(150*scal);
             textAlign(CENTER,CENTER);
-            text(goalNum, width/2, height/2);
+            text(goalNum, width/2, height/2-(20*scal));
             textAlign(CENTER,TOP);
             textSize(50*scal);
-            text("Time: " + round(time) + "\n\nScore: "+score,width/2,20*(height/1080));
+            fill(7,166,153);
+            text("Time: " + round(time),width/2,20*(height/1080));
+            text("Score: "+score,width/2,20*(height/1080) + (60*scal));
             for(lostPoint lp : lostPoints){
               if(lp.shouldRemove == false){
                 lp.draw();
@@ -361,7 +376,7 @@ void drawGame(){
         case 1:
             break;
         case 2:
-            noFill();
+            fill(7,166,153);
             textSize(80*scal);
             background(backgroundColor);
             textAlign(CENTER,CENTER);
@@ -373,17 +388,22 @@ void drawGame(){
         case 3:
           background(backgroundColor);
           textAlign(CENTER,TOP);
-          fill(0);
+          fill(7,166,153);
           textSize(80*scal);
           text("Options",width/2,scal*10);
           menu_options.draw();
+          option_music.draw();
         break;
         case 4:
           background(backgroundColor);
           textAlign(CENTER,TOP);
-          fill(0);
+          fill(7,166,153);
           textSize(80*scal);
-          text("Options",width/2,scal*10);
+          text("Credits",width/2,scal*10);
+          textSize(40*scal);
+          textAlign(CENTER,CENTER);
+          fill(0,abs(sin(frameCount/50)*255),0);
+          text("Micah - Original Idea\nIdriss - Original Code\nLoki - Programming, code adaption\nWilliam Hu - Design and Graphics\nGrandzam - Music",0,scal*90,width,height-(height/6));
           menu_credits.draw();
         break;
         default:
@@ -439,7 +459,12 @@ void updateGame() {
             }
         break;
         case 1:
-            credits.checkPressed();
+            if(credits.checkPressed()){
+                gameState = 4;
+                startTime = -1;
+                score = 0;
+                return;
+            }
             if(options.checkPressed()){
                 gameState = 3;
                 startTime = -1;
@@ -458,6 +483,7 @@ void updateGame() {
                gameState = 0;
                startTime = millis();
                score = 0;
+               play_action();
                return;
             }
          break;
@@ -466,6 +492,7 @@ void updateGame() {
              gameState = 0;
              startTime = millis();
              score = 0;
+             play_action();
              return;
            }
            if(menu_button.checkPressed()){
@@ -482,6 +509,31 @@ void updateGame() {
               score = 0;
               return;
             }
+            if(option_music.checkPressed()){
+              //red = color(207, 149, 149),color(166, 8, 8)
+              //green = color(157, 209, 148),color(8, 166, 24)
+              //color fntClr, color clr
+              if(music == "enabled"){
+                music = "disabled";
+                option_music.txt = "Music is " + music;
+                option_music.fntClr = color(207, 149, 149);
+                option_music.clr = color(166, 8, 8);
+              }else if(music == "disabled"){
+                music = "enabled";
+                option_music.txt = "Music is " + music;
+                option_music.fntClr = color(157, 209, 148);
+                option_music.clr = color(8, 166, 24);
+              }
+              return;
+            }
+         break;
+         case 4:
+           if(menu_credits.checkPressed()){
+              gameState = 1;
+              startTime = -1;
+              score = 0;
+              return;
+            }
          break;
     }
 }
@@ -493,4 +545,18 @@ void draw() {  // this is run repeatedly.
 }
 void mouseReleased() {
   updateGame();
+}
+void stop() {
+  if(music == "disabled"){
+    return;  
+  }
+  player.close();
+  minim.stop();
+}
+void play_action() {
+  if(music == "disabled"){
+    return;  
+  }
+  player = minim.loadFile("actionmode.mp3",2048);
+  player.play();
 }
