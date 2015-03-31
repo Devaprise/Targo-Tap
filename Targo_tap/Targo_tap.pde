@@ -454,7 +454,7 @@ void drawGame(){
           textSize(40*scal);
           textAlign(CENTER,CENTER);
           fill(0,abs(sin(frameCount/50)*255),0);
-          text("Micah - Original Idea\nIdriss - Original Code\nLoki - Programming, code adaption\nWilliam Hu - Design and Graphics\nGrandzam - Music\n\nPlease note that Grandzam's music is currently not available in game due to some incompatibilities.",0,scal*90,width,height-(height/6));
+          text("Micah - Original Idea\nIdriss - Original Code\nLoki - Programming, code adaption\nWilliam - Design and Graphics\nGrandzam - Music\n\nPlease note that Grandzam's music is currently not available in game due to some incompatibilities.",0,scal*90,width,height-(height/6));
           menu_credits.draw();
         break;
         default:
