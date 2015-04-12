@@ -1,14 +1,13 @@
+
 /**
   sound will be implemented at a later date for mobile devices.
   minim refused to work on android ;(
 **/
-
-/*import ddf.minim.effects.*;
-import ddf.minim.analysis.*;
-import ddf.minim.signals.*;
-import ddf.minim.spi.*;
-import ddf.minim.*;
-import ddf.minim.ugens.*;*/
+//:) leaderboard
+//import android.*;
+import apwidgets.*;
+APMediaPlayer player;
+JSONObject leaderboard;
 
 // This sketch builds on a prior work, "Targo Tap", created by Virus & Micah Canfield & Wes
 // http://studio.sketchpad.cc/sp/pad/view/ro.98$Fad5UME48E/rev.1511
@@ -28,7 +27,7 @@ int scalY;
 class Prompt {
   String title;
   String message;
-  boolean disabled = false;
+  boolean disabled = true;
   Prompt(String title, String message) {
     this.title = title;
     this.message = message;
@@ -269,7 +268,6 @@ menuButton menu;
 String music = "enabled"; //Enable or disable music
  
 void setup() {  // this is run once.   
-    
     // set the background color
     background(backgroundColor);
     
@@ -315,12 +313,13 @@ void setup() {  // this is run once.
     play = new menuButton("Play Targo Tap",color(157, 209, 148),color(8, 166, 24),0, height - (round(height/3.33)*2), width, round(height/3.33));
     menu_options = new menuButton("Menu",color(207,206,147),color(166,163,8),0,height - (height/6),width,height/6);
     menu_credits = new menuButton("Menu",color(207,206,147),color(166,163,8),0,height - (height/6),width,height/6);
-    option_music = new menuButton("Music is NYI",color(157, 209, 148),color(8, 166, 24),round(width*0.1),round(height/2) - round(round(height/6)/2),round(width*0.8),height/6);
+    option_music = new menuButton("Music is " + music,color(157, 209, 148),color(8, 166, 24),round(width*0.1),round(height/2) - round(round(height/6)/2),round(width*0.8),height/6);
     //red = color(207, 149, 149),color(166, 8, 8)
     //green = color(157, 209, 148),color(8, 166, 24)
       prompt1 = new Prompt("Upcoming features...","- Music\n- More Modes!\n- Much, much more!");
   scalX = width/720;
   scalY = height/1080;
+  player = new APMediaPlayer(this);
 }
 
  
@@ -333,7 +332,7 @@ void title() {
         text("Targo Tap", width/2, height/6);
     }
     textSize(70*scal);
-    text("Alpha!",width/2,height/6 + ((96*scal)*1.25));
+    text("Fresh!",width/2,height/6 + ((96*scal)*1.25));
     options.draw();
     credits.draw();
     play.draw();
@@ -355,7 +354,6 @@ void drawGame(){
             int time = (round(startTime/1000)+30) - round(millis()/1000);
             if(time <= 0){
                gameState = 2;
-               stop();
                return;
             }
             background(backgroundColor);
@@ -398,17 +396,16 @@ void drawGame(){
             button1.draw();
             button2.draw();
             button3.draw();
-            fill(0);
-            rectMode(CENTER);
-            noStroke();
-            rect(width/2, height/2, 150*scal, 150*scal);
-            rectMode(CORNER);
             fill(255);
-            textSize(150*scal);
+            noStroke();
+            ellipse(width/2, height/2, 150*scal, 150*scal);
+            fill(100);
+            textSize(130*scal);
             textAlign(CENTER,CENTER);
-            text(goalNum, width/2, height/2-(20*scal));
+            text(goalNum, width/2, height/2);
+            fill(0);
             textAlign(CENTER,TOP);
-            textSize(50*scal);
+            textSize(60*scal);
             fill(7,166,153);
             text("Time: " + round(time),width/2,20*(height/1080));
             text("Score: "+score,width/2,20*(height/1080) + (60*scal));
@@ -452,9 +449,9 @@ void drawGame(){
           textSize(80*scal);
           text("Credits",width/2,scal*10);
           textSize(40*scal);
-          textAlign(CENTER,CENTER);
-          fill(0,abs(sin(frameCount/50)*255),0);
-          text("Micah - Original Idea\nIdriss - Original Code\nLoki - Programming, code adaption\nWilliam Hu - Design and Graphics\nGrandzam - Music\n\nPlease note that Grandzam's music is currently not available in game due to some incompatibilities.",0,scal*90,width,height-(height/6));
+          textAlign(LEFT,CENTER);
+          fill(0,0,0);
+          text("Micah - Original Idea/Code\nIdriss - Original Code\nLoki - Programming\nWilliam Hu - Design and Graphics\nGrandzam - Action Music [NYI]\nCharles - Zen Music",0,scal*90,width,height-(height/6));
           menu_credits.draw();
         break;
         default:
@@ -543,6 +540,7 @@ void updateGame() {
              gameState = 0;
              startTime = millis();
              score = 0;
+             stop();
              play_action();
              return;
            }
@@ -550,6 +548,7 @@ void updateGame() {
               gameState = 1;
               startTime = -1;
               score = 0;
+              stop();
               return;
             }
          break;
@@ -564,7 +563,7 @@ void updateGame() {
               //red = color(207, 149, 149),color(166, 8, 8)
               //green = color(157, 209, 148),color(8, 166, 24)
               //color fntClr, color clr
-              /*if(music == "enabled"){
+              if(music == "enabled"){
                 music = "disabled";
                 option_music.txt = "Music is " + music;
                 option_music.fntClr = color(207, 149, 149);
@@ -574,10 +573,7 @@ void updateGame() {
                 option_music.txt = "Music is " + music;
                 option_music.fntClr = color(157, 209, 148);
                 option_music.clr = color(8, 166, 24);
-              }*/
-              option_music.txt = "Music is NYI";
-              option_music.fntClr = color(207, 149, 149);
-              option_music.clr = color(166, 8, 8);
+              }
               return;
             }
          break;
@@ -606,16 +602,18 @@ void mouseReleased() {
   updateGame();
 }
 void stop() {
-  //if(music == "disabled"){
-  //  return;  
-  //}
-  //player.close();
-  //minim.stop();
+  if(music == "disabled"){
+    return;  
+  }
+  player.seekTo(0);
+  player.pause();
 }
 void play_action() {
-  //if(music == "disabled"){
-  //  return;  
-  //}
-  //player = minim.loadFile("actionmode.mp3",2048);
- // player.play();
+  if(music == "disabled"){
+    return;  
+  }
+  player.setMediaFile("zenmode.mp3");
+  player.start();
+  player.setLooping(true);
+  player.setVolume(1.0,1.0);
 }
