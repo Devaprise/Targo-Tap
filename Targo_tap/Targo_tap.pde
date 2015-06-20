@@ -270,22 +270,22 @@ String music = "enabled"; //Enable or disable music
 void setup() {  // this is run once.   
     // set the background color
     background(backgroundColor);
-    
+    orientation(PORTRAIT);
       //minim = new Minim(this);
     
     // canvas size (Variable aren't evaluated. Integers only, please.)
-    //boolean device = true;
-    //if(device){
-      //size(int(displayWidth), int(displayWidth)); 
-      scal = round(width/720);
-      //size(720, 1080); 
-      //scal = round(width/720);
-    //}else{
-      //size(360,540);
-      //scal = 0.5;
-    //  scal=0.5;
-    //}
-    //size(720, 1080);
+    boolean device = true;
+    if(device){
+      size(displayWidth, displayWidth); 
+      scal = round(displayWidth/720);
+      size(720, 1080); 
+      scal = round(displayWidth/720);
+    }else{
+      size(360,540);
+      scal = 0.5;
+     scal=0.5;
+    }
+    size(displayWidth, displayHeight);
     
     // limit the number of frames per second
     frameRate(60);
@@ -449,23 +449,15 @@ void drawGame(){
           textSize(80*scal);
           text("Credits",width/2,scal*10);
           textSize(40*scal);
-<<<<<<< HEAD
-          textAlign(LEFT,CENTER);
-          fill(0,0,0);
-          text("Micah - Original Idea/Code\nIdriss - Original Code\nLoki - Programming\nWilliam Hu - Design and Graphics\nGrandzam - Action Music [NYI]\nCharles - Zen Music",0,scal*90,width,height-(height/6));
-=======
           textAlign(CENTER,CENTER);
           fill(0,abs(sin(frameCount/50)*255),0);
-          text("Micah - Original Idea\nIdriss - Original Code\nLoki - Programming, code adaption\nWilliam - Design and Graphics\nGrandzam - Music\n\nPlease note that Grandzam's music is currently not available in game due to some incompatibilities.",0,scal*90,width,height-(height/6));
->>>>>>> origin/master
+          text("Micah - Original Idea\nVirus - Original Code\nLoki - Programming, code adaption\nWilliam - Design and Graphics\nGrandzam - Music\n\nPlease note that Grandzam's music is currently not available in game due to some incompatibilities.",0,scal*90,width,height-(height/6));
           menu_credits.draw();
         break;
         default:
           textSize(50);
-          
           //text("Uh Oh!");
           textSize(30);
-          
           //text("Page has not been found!");
          
     }
