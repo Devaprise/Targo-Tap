@@ -5,9 +5,9 @@
 **/
 //:) leaderboard
 //import android.*;
-import apwidgets.*;
-APMediaPlayer player;
-JSONObject leaderboard;
+//import apwidgets.*;
+//APMediaPlayer player;
+//JSONObject leaderboard;
 
 // This sketch builds on a prior work, "Targo Tap", created by Virus & Micah Canfield & Wes
 // http://studio.sketchpad.cc/sp/pad/view/ro.98$Fad5UME48E/rev.1511
@@ -57,7 +57,7 @@ class Prompt {
   }
 }
 
-Prompt prompt1;
+//Prompt prompt1;
 //resources
 float scal;
 boolean onButton = false;
@@ -265,7 +265,7 @@ menuButton menu_credits;
 menuButton option_music;
 menuButton menu;
  
-String music = "enabled"; //Enable or disable music
+String music = "diabled"; //Enable or disable music
  
 void setup() {  // this is run once.   
     // set the background color
@@ -319,7 +319,7 @@ void setup() {  // this is run once.
       prompt1 = new Prompt("Upcoming features...","- Music\n- More Modes!\n- Much, much more!");
   scalX = width/720;
   scalY = height/1080;
-  player = new APMediaPlayer(this);
+  //player = new APMediaPlayer(this);
 }
 
  
@@ -590,28 +590,28 @@ void draw() {  // this is run repeatedly.
     textAlign(CENTER, CENTER);
     drawGame();
     //theta+=0.01;
-    prompt1.draw();
+    //prompt1.draw();
 }
 void mouseReleased() {
-  if(prompt1.disabled == false){
-    prompt1.disable();
-    return;
-  }
+  //if(prompt1.disabled == false){
+  //  prompt1.disable();
+  //  return;
+  //}
   updateGame();
 }
 void stop() {
   if(music == "disabled"){
     return;  
   }
-  player.seekTo(0);
-  player.pause();
+  //player.seekTo(0);
+  //player.pause();
 }
 void play_action() {
   if(music == "disabled"){
     return;  
   }
-  player.setMediaFile("zenmode.mp3");
-  player.start();
-  player.setLooping(true);
-  player.setVolume(1.0,1.0);
+  //player.setMediaFile("zenmode.mp3");
+  //player.start();
+  //player.setLooping(true);
+  //player.setVolume(1.0,1.0);
 }
